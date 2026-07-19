@@ -1,0 +1,18 @@
+{
+  "name": "fleetops-pro",
+  "version": "3.0.0",
+  "description": "Fleet management SaaS — beyond GPS",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -p 3000 --single",
+    "build": "echo 'Static — no build step needed'",
+    "deploy:netlify": "npx netlify deploy --prod --dir .",
+    "deploy:vercel": "npx vercel --prod",
+    "tenant:create": "node scripts/create-tenant.js"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "engines": { "node": ">=18.0.0" },
+  "license": "UNLICENSED"
+}
