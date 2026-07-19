@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fleet Ops</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=DM+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f1117;--bg2:#171a23;--bg3:#1e2130;--bg4:#252840;
+  --border:#2e3248;--border2:#3a3f5c;
+  --text:#e8eaf6;--text2:#9ca3bf;--text3:#6b7494;
+  --accent:#4f8ef7;--accent2:#6ea3ff;--accent-bg:rgba(79,142,247,0.12);
+  --green:#34c97b;--green-bg:rgba(52,201,123,0.12);
+  --amber:#f5a623;--amber-bg:rgba(245,166,35,0.12);
+  --red:#f25a5a;--red-bg:rgba(242,90,90,0.12);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.12);
+  --sidebar:220px;--header:56px;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  font-family:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input,select,textarea{font-family:inherit;outline:none}
+
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:var(--header);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:50}
+.content{flex:1;padding:24px;overflow-y:auto}
+
+.logo{padding:20px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:17px;height:17px;fill:white}
+.logo-text{font-size:16px;font-weight:600;letter-spacing:-0.3px;color:var(--text)}
+.logo-badge{font-size:10px;font-weight:500;background:var(--accent-bg);color:var(--accent2);padding:2px 6px;border-radius:4px;margin-left:2px}
+.nav{padding:12px 10px;flex:1}
+.nav-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);padding:8px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:13.5px;font-weight:400;color:var(--text2);transition:all 0.15s;margin-bottom:2px}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--accent-bg);color:var(--accent2);font-weight:500}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.8}
+.nav-item.active svg{opacity:1}
+.sidebar-footer{padding:14px 10px;border-top:1px solid var(--border)}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-sm)}
+.avatar{width:30px;height:30px;background:var(--accent-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent2);flex-shrink:0}
+.user-info p{font-size:12.5px;font-weight:500;color:var(--text)}
+.user-info span{font-size:11px;color:var(--text3)}
+
+.page-title{font-size:15px;font-weight:600;color:var(--text)}
+.page-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.search-wrap{position:relative}
+.search-wrap input{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px 7px 32px;font-size:13px;color:var(--text);width:200px;transition:all 0.15s}
+.search-wrap input:focus{border-color:var(--border2);background:var(--bg4);width:240px}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--text3)}
+.icon-btn{width:34px;height:34px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--text2);transition:all 0.15s;cursor:pointer;position:relative}
+.icon-btn:hover{background:var(--bg4);border-color:var(--border2);color:var(--text)}
+.notif-dot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1px solid var(--bg2)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:white}
+.btn-primary:hover{background:var(--accent2)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2)}
+.btn-outline:hover{background:var(--bg3);color:var(--text)}
+.btn svg{width:14px;height:14px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.card-title{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-header .card-title{margin-bottom:0}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;display:flex;align-items:center;gap:14px}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-icon svg{width:20px;height:20px}
+.stat-label{font-size:12px;color:var(--text3);margin-bottom:3px}
+.stat-value{font-size:24px;font-weight:600;font-family:'DM Mono',monospace;letter-spacing:-0.5px;color:var(--text)}
+
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:100px;font-size:11px;font-weight:500}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-blue{background:var(--accent-bg);color:var(--accent2)}
+.badge-gray{background:var(--bg3);color:var(--text3)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+
+.content-grid{display:grid;grid-template-columns:1fr 280px;gap:16px;margin-bottom:16px}
+.col-stack{display:flex;flex-direction:column;gap:16px}
+
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:9px 14px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;color:var(--text3);border-bottom:1px solid var(--border)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+.vehicle-cell{display:flex;align-items:center;gap:10px}
+.vehicle-icon{width:30px;height:30px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vehicle-icon svg{width:14px;height:14px;color:var(--text3)}
+.vehicle-name{font-weight:500;color:var(--text);font-size:13px}
+.vehicle-sub{font-size:11px;color:var(--text3)}
+.transfer-arrow{display:flex;align-items:center;gap:6px;font-size:12px}
+.transfer-arrow svg{width:12px;height:12px;color:var(--text3)}
+
+.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.status-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;text-align:center}
+.status-box-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.status-box-icon svg{width:22px;height:22px}
+.status-box-count{font-size:28px;font-weight:600;font-family:'DM Mono',monospace;color:var(--text)}
+.status-box-label{font-size:12px;color:var(--text3);margin-bottom:2px}
+.status-box-pct{font-size:11px;color:var(--text3)}
+
+.quick-action{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:var(--radius-sm);background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;margin-bottom:8px;font-size:13px;font-weight:500;color:var(--text2)}
+.quick-action:last-child{margin-bottom:0}
+.quick-action:hover{background:var(--bg4);border-color:var(--border2);color:var(--text)}
+.qa-icon{width:30px;height:30px;background:var(--accent-bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qa-icon svg{width:14px;height:14px;color:var(--accent2)}
+
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid;margin-bottom:8px;font-size:12.5px}
+.alert-item:last-child{margin-bottom:0}
+.alert-warn{background:var(--amber-bg);border-color:rgba(245,166,35,0.25)}
+.alert-info{background:var(--accent-bg);border-color:rgba(79,142,247,0.25)}
+.alert-success{background:var(--green-bg);border-color:rgba(52,201,123,0.25)}
+.alert-icon{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.alert-title{font-weight:500;margin-bottom:2px}
+.alert-msg{opacity:0.8;line-height:1.4}
+
+.vehicle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.vcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:all 0.15s}
+.vcard:hover{border-color:var(--border2);background:var(--bg3)}
+.vcard-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.vcard-icon{width:36px;height:36px;background:var(--bg3);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.vcard-icon svg{width:17px;height:17px;color:var(--text3)}
+.vcard-make{font-size:13.5px;font-weight:600;color:var(--text)}
+.vcard-fleet{font-size:11px;color:var(--text3)}
+.vcard-details{display:flex;flex-direction:column;gap:5px;font-size:12px;margin-bottom:12px}
+.vcard-row{display:flex;justify-content:space-between}
+.vcard-key{color:var(--text3)}
+.vcard-val{color:var(--text2);font-weight:500}
+.vcard-actions{display:flex;gap:6px}
+.vcard-btn{flex:1;padding:6px;font-size:12px;font-weight:500;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all 0.15s}
+.vcard-btn:hover{background:var(--bg4);border-color:var(--border2);color:var(--text)}
+.vcard-btn.danger{color:var(--red)}
+.vcard-btn.danger:hover{background:var(--red-bg)}
+
+.cc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.cc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:all 0.15s}
+.cc-card:hover{border-color:var(--border2)}
+.cc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.cc-icon-wrap{width:36px;height:36px;background:var(--accent-bg);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.cc-icon-wrap svg{width:17px;height:17px;color:var(--accent2)}
+.cc-name{font-size:13.5px;font-weight:600;color:var(--text)}
+.cc-code{font-size:11px;color:var(--text3)}
+.cc-desc{font-size:12px;color:var(--text3);margin-bottom:10px;line-height:1.4}
+.cc-meta{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);margin-bottom:12px}
+.cc-meta svg{width:13px;height:13px}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);width:100%;max-width:520px;max-height:85vh;overflow-y:auto}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:600;color:var(--text)}
+.modal-close{width:28px;height:28px;background:var(--bg3);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);border:1px solid var(--border)}
+.modal-close:hover{color:var(--text);border-color:var(--border2)}
+.modal-body{padding:20px 24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.form-row{margin-bottom:14px}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;color:var(--text);transition:all 0.15s}
+.form-input:focus{border-color:var(--accent);background:var(--bg4)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input{cursor:pointer}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.settings-section{margin-bottom:24px}
+.settings-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-key{font-size:13.5px;color:var(--text);font-weight:500}
+.settings-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.toggle{width:38px;height:22px;background:var(--border2);border-radius:100px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle-knob{width:16px;height:16px;background:white;border-radius:50%;position:absolute;top:3px;left:3px;transition:left 0.2s}
+.toggle.on .toggle-knob{left:19px}
+
+.empty{text-align:center;padding:40px 20px}
+.empty-icon{width:48px;height:48px;background:var(--bg3);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.empty-icon svg{width:22px;height:22px;color:var(--text3)}
+.empty h3{font-size:14px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.empty p{font-size:12.5px;color:var(--text3)}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:100px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zm-.5 1.5l1.96 2.5H17V9.5h2.5zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2.22-3c-.55-.61-1.35-1-2.22-1s-1.67.39-2.22 1H3V6h12v9H8.22zM18 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="logo-text">Fleet Ops</span>
+          <span class="logo-badge">Pro</span>
+        </div>
+        <div style="font-size:10px;color:var(--text3)">Operations Platform</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Main</div>
+      <div class="nav-item active" onclick="navigate('dashboard',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="navigate('fleet',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/></svg>
+        Fleet Management
+      </div>
+      <div class="nav-item" onclick="navigate('transfers',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+        Vehicle Transfers
+      </div>
+      <div class="nav-item" onclick="navigate('costcenters',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
+        Cost Centers
+      </div>
+      <div class="nav-label" style="margin-top:8px">System</div>
+      <div class="nav-item" onclick="navigate('settings',this)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+        Settings
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="avatar">FM</div>
+        <div class="user-info">
+          <p>Fleet Manager</p>
+          <span>Administrator</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div id="page-heading">
+        <div class="page-title">Fleet Dashboard</div>
+        <div class="page-sub">Manage your fleet operations efficiently</div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" placeholder="Search vehicles, transfers..." id="global-search" oninput="handleSearch(this.value)"/>
+        </div>
+        <div class="icon-btn" title="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          <span class="notif-dot"></span>
+        </div>
+        <button class="btn btn-primary" id="main-action-btn" onclick="openMainModal()" style="display:none">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span id="main-action-label">Add Vehicle</span>
+        </button>
+      </div>
+    </header>
+    <main class="content" id="page-content"></main>
+  </div>
+</div>
+
+<div class="overlay" id="modal-overlay" style="display:none" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Add Vehicle</span>
+      <div class="modal-close" onclick="closeModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let state = {
+  page:'dashboard',
+  vehicles:[
+    {id:1,make:'Toyota',model:'Land Cruiser',year:2022,licensePlate:'ABC-1234',vin:'1HG001',fleetNumber:'FL-001',status:'available',costCenterId:1,mileage:12400,fuelType:'gasoline',vehicleType:'suv'},
+    {id:2,make:'Ford',model:'Transit',year:2023,licensePlate:'DEF-5678',vin:'1HG002',fleetNumber:'FL-002',status:'in_use',costCenterId:2,mileage:8700,fuelType:'diesel',vehicleType:'van'},
+    {id:3,make:'Mitsubishi',model:'L200',year:2021,licensePlate:'GHI-9012',vin:'1HG003',fleetNumber:'FL-003',status:'maintenance',costCenterId:1,mileage:31200,fuelType:'diesel',vehicleType:'truck'},
+    {id:4,make:'Nissan',model:'Patrol',year:2023,licensePlate:'JKL-3456',vin:'1HG004',fleetNumber:'FL-004',status:'available',costCenterId:3,mileage:4100,fuelType:'gasoline',vehicleType:'suv'},
+    {id:5,make:'Mercedes',model:'Sprinter',year:2022,licensePlate:'MNO-7890',vin:'1HG005',fleetNumber:'FL-005',status:'available',costCenterId:2,mileage:19800,fuelType:'diesel',vehicleType:'van'},
+    {id:6,make:'Toyota',model:'Hilux',year:2020,licensePlate:'PQR-1234',vin:'1HG006',fleetNumber:'FL-006',status:'out_of_service',costCenterId:null,mileage:67300,fuelType:'diesel',vehicleType:'truck'},
+  ],
+  costCenters:[
+    {id:1,name:'Operations North',code:'OPS-N',description:'Northern regional operations hub',isActive:true},
+    {id:2,name:'Logistics South',code:'LOG-S',description:'Southern distribution center',isActive:true},
+    {id:3,name:'Executive Fleet',code:'EXC-F',description:'Senior management vehicles',isActive:true},
+    {id:4,name:'Field Services',code:'FLD-S',description:'On-site field service teams',isActive:false},
+  ],
+  transfers:[
+    {id:1,vehicleId:2,fromCostCenterId:1,toCostCenterId:2,status:'completed',reason:'Project reassignment',requestedBy:'Ahmed Al-Rashid',approvedBy:'Fatima Hassan',createdAt:'2026-04-01T09:00:00'},
+    {id:2,vehicleId:4,fromCostCenterId:3,toCostCenterId:1,status:'pending',reason:'Maintenance rotation',requestedBy:'Hassan Zarroug',approvedBy:null,createdAt:'2026-04-03T14:30:00'},
+    {id:3,vehicleId:1,fromCostCenterId:2,toCostCenterId:3,status:'in_progress',reason:'Executive requirement',requestedBy:'Sara Al-Malik',approvedBy:'Hassan Zarroug',createdAt:'2026-04-04T11:00:00'},
+    {id:4,vehicleId:5,fromCostCenterId:null,toCostCenterId:2,status:'completed',reason:'New vehicle assignment',requestedBy:'Ahmed Al-Rashid',approvedBy:'Fatima Hassan',createdAt:'2026-03-28T08:00:00'},
+    {id:5,vehicleId:3,fromCostCenterId:1,toCostCenterId:null,status:'cancelled',reason:'No longer needed',requestedBy:'Hassan Zarroug',approvedBy:null,createdAt:'2026-03-25T16:00:00'},
+  ],
+  toggles:{darkMode:true,notifications:true,autoApprove:false,emailAlerts:true,smsAlerts:false},
+  search:'',modalMode:null,editId:null
+};
+
+function navigate(page,el){
+  state.page=page;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const h={dashboard:{title:'Fleet Dashboard',sub:'Manage your fleet operations efficiently'},fleet:{title:'Fleet Management',sub:'Manage your vehicle inventory'},transfers:{title:'Vehicle Transfers',sub:'Manage transfers between cost centers'},costcenters:{title:'Cost Centers',sub:'Manage organizational cost centers'},settings:{title:'Settings',sub:'Configure your Fleet Ops platform'}};
+  const p=h[page];
+  document.getElementById('page-heading').innerHTML=`<div class="page-title">${p.title}</div><div class="page-sub">${p.sub}</div>`;
+  const btn=document.getElementById('main-action-btn');
+  const lbl=document.getElementById('main-action-label');
+  if(page==='fleet'){btn.style.display='inline-flex';lbl.textContent='Add Vehicle';}
+  else if(page==='transfers'){btn.style.display='inline-flex';lbl.textContent='New Transfer';}
+  else if(page==='costcenters'){btn.style.display='inline-flex';lbl.textContent='Add Cost Center';}
+  else btn.style.display='none';
+  render();
+}
+
+function render(){
+  const c=document.getElementById('page-content');
+  if(state.page==='dashboard') c.innerHTML=renderDashboard();
+  else if(state.page==='fleet') c.innerHTML=renderFleet();
+  else if(state.page==='transfers') c.innerHTML=renderTransfers();
+  else if(state.page==='costcenters') c.innerHTML=renderCostCenters();
+  else if(state.page==='settings') c.innerHTML=renderSettings();
+}
+
+function stats(){
+  const v=state.vehicles;
+  const b={available:0,in_use:0,maintenance:0,out_of_service:0};
+  v.forEach(x=>{if(b[x.status]!==undefined)b[x.status]++;});
+  return{total:v.length,active:v.filter(x=>x.status==='available'||x.status==='in_use').length,pending:state.transfers.filter(x=>x.status==='pending').length,costCenters:state.costCenters.length,byStatus:b};
+}
+function ccName(id){if(!id)return'Unassigned';const c=state.costCenters.find(x=>x.id===id);return c?c.name:'Unknown';}
+function vName(id){const v=state.vehicles.find(x=>x.id===id);return v?`${v.make} ${v.model} (${v.fleetNumber})`:'Unknown Vehicle';}
+function statusBadge(s){const m={available:'badge-green',in_use:'badge-blue',maintenance:'badge-amber',out_of_service:'badge-red',completed:'badge-green',in_progress:'badge-blue',pending:'badge-amber',cancelled:'badge-red'};return`<span class="badge ${m[s]||'badge-gray'}">${s.replace(/_/g,' ')}</span>`;}
+function timeAgo(d){const diff=(new Date()-new Date(d))/1000;if(diff<3600)return Math.round(diff/60)+'m ago';if(diff<86400)return Math.round(diff/3600)+'h ago';return Math.round(diff/86400)+'d ago';}
+function vIcon(type){const truck=`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/></svg>`;const car=`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;return(type==='truck'||type==='van')?truck:car;}
+
+function svgCar(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>`;}
+function svgCheck(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14l-4-4 1.41-1.41L10 13.17l6.59-6.59L18 8l-8 8z"/></svg>`;}
+function svgArrows(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>`;}
+function svgBuilding(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>`;}
+function svgWrench(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>`;}
+function svgAlert(c){return`<svg width="20" height="20" viewBox="0 0 24 24" fill="${c}"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`;}
+function svgPlus(c){return`<svg width="14" height="14" viewBox="0 0 24 24" fill="${c}"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;}
+function svgDoc(c){return`<svg width="14" height="14" viewBox="0 0 24 24" fill="${c}"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>`;}
+
+function renderDashboard(){
+  const s=stats();
+  const recent=state.transfers.slice(0,5);
+  const pct=t=>s.total?Math.round((t/s.total)*100):0;
+  return`<div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon" style="background:var(--accent-bg)">${svgCar('var(--accent2)')}</div><div><div class="stat-label">Total Vehicles</div><div class="stat-value">${s.total}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--green-bg)">${svgCheck('var(--green)')}</div><div><div class="stat-label">Active Vehicles</div><div class="stat-value">${s.active}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--amber-bg)">${svgArrows('var(--amber)')}</div><div><div class="stat-label">Pending Transfers</div><div class="stat-value">${s.pending}</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:var(--purple-bg)">${svgBuilding('var(--purple)')}</div><div><div class="stat-label">Cost Centers</div><div class="stat-value">${s.costCenters}</div></div></div>
+  </div>
+  <div class="content-grid">
+    <div><div class="card">
+      <div class="card-header"><span class="card-title">Recent Transfers</span><button class="btn btn-outline" style="font-size:12px;padding:5px 10px" onclick="navigate('transfers',document.querySelectorAll('.nav-item')[2])">View all</button></div>
+      <div class="table-wrap">${recent.length===0?'<div class="empty"><div class="empty-icon">'+svgArrows('var(--text3)')+'</div><h3>No transfers yet</h3><p>Initiate a transfer to get started</p></div>':`<table><thead><tr><th>Vehicle</th><th>Route</th><th>Status</th><th>When</th></tr></thead><tbody>${recent.map(t=>{const v=state.vehicles.find(x=>x.id===t.vehicleId);const vn=v?`${v.make} ${v.model}`:'Unknown';const vf=v?v.fleetNumber:'N/A';return`<tr><td><div class="vehicle-cell"><div class="vehicle-icon">${vIcon(v?.vehicleType)}</div><div><div class="vehicle-name">${vn}</div><div class="vehicle-sub">${vf}</div></div></div></td><td><div class="transfer-arrow"><span>${ccName(t.fromCostCenterId)}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg><span>${ccName(t.toCostCenterId)}</span></div></td><td>${statusBadge(t.status)}</td><td style="color:var(--text3);font-size:12px">${timeAgo(t.createdAt)}</td></tr>`;}).join('')}</tbody></table>`}</div>
+    </div></div>
+    <div class="col-stack">
+      <div class="card"><div class="card-title">Quick Actions</div>
+        <div class="quick-action" onclick="openVehicleModal()"><div class="qa-icon">${svgPlus('var(--accent2)')}</div>Add New Vehicle</div>
+        <div class="quick-action" onclick="openTransferModal()"><div class="qa-icon">${svgArrows('var(--accent2)')}</div>Initiate Transfer</div>
+        <div class="quick-action" onclick="navigate('costcenters',document.querySelectorAll('.nav-item')[3])"><div class="qa-icon">${svgBuilding('var(--accent2)')}</div>Manage Cost Centers</div>
+        <div class="quick-action" onclick="alert('Export feature coming soon!')"><div class="qa-icon">${svgDoc('var(--accent2)')}</div>Export Reports</div>
+      </div>
+      <div class="card"><div class="card-title">Recent Alerts</div>
+        <div class="alert-item alert-warn"><svg class="alert-icon" viewBox="0 0 24 24" fill="var(--amber)"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg><div><div class="alert-title" style="color:var(--amber)">Maintenance Due</div><div class="alert-msg" style="color:var(--amber)">3 vehicles require maintenance within 7 days</div></div></div>
+        <div class="alert-item alert-info"><svg class="alert-icon" viewBox="0 0 24 24" fill="var(--accent2)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><div><div class="alert-title" style="color:var(--accent2)">Transfer Approval</div><div class="alert-msg" style="color:var(--accent2)">2 transfers pending your approval</div></div></div>
+        <div class="alert-item alert-success"><svg class="alert-icon" viewBox="0 0 24 24" fill="var(--green)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14l-4-4 1.41-1.41L10 13.17l6.59-6.59L18 8l-8 8z"/></svg><div><div class="alert-title" style="color:var(--green)">System Update</div><div class="alert-msg" style="color:var(--green)">Fleet tracking system updated successfully</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card"><div class="card-header"><span class="card-title">Fleet Status Overview</span><div style="display:flex;gap:8px"><button class="btn btn-outline" style="font-size:12px;padding:5px 10px">Filter</button><button class="btn btn-outline" style="font-size:12px;padding:5px 10px">Export</button></div></div>
+    <div class="status-grid">
+      <div class="status-box"><div class="status-box-icon" style="background:var(--green-bg)">${svgCheck('var(--green)')}</div><div class="status-box-label">Available</div><div class="status-box-count">${s.byStatus.available}</div><div class="status-box-pct">${pct(s.byStatus.available)}% of fleet</div></div>
+      <div class="status-box"><div class="status-box-icon" style="background:var(--accent-bg)">${svgCar('var(--accent2)')}</div><div class="status-box-label">In Use</div><div class="status-box-count">${s.byStatus.in_use}</div><div class="status-box-pct">${pct(s.byStatus.in_use)}% of fleet</div></div>
+      <div class="status-box"><div class="status-box-icon" style="background:var(--amber-bg)">${svgWrench('var(--amber)')}</div><div class="status-box-label">Maintenance</div><div class="status-box-count">${s.byStatus.maintenance}</div><div class="status-box-pct">${pct(s.byStatus.maintenance)}% of fleet</div></div>
+      <div class="status-box"><div class="status-box-icon" style="background:var(--red-bg)">${svgAlert('var(--red)')}</div><div class="status-box-label">Out of Service</div><div class="status-box-count">${s.byStatus.out_of_service}</div><div class="status-box-pct">${pct(s.byStatus.out_of_service)}% of fleet</div></div>
+    </div>
+  </div>`;
+}
+
+function renderFleet(){
+  const q=state.search.toLowerCase();
+  const list=state.vehicles.filter(v=>!q||v.make.toLowerCase().includes(q)||v.model.toLowerCase().includes(q)||v.licensePlate.toLowerCase().includes(q)||v.fleetNumber.toLowerCase().includes(q));
+  if(list.length===0)return`<div class="card"><div class="empty"><div class="empty-icon">${svgCar('var(--text3)')}</div><h3>${q?'No vehicles found':'No vehicles yet'}</h3><p>${q?'Try adjusting your search.':'Add your first vehicle to get started.'}</p></div></div>`;
+  return`<div class="card"><div class="card-header"><span class="card-title">Vehicle Inventory <span style="color:var(--text3);font-weight:400;font-size:12px;margin-left:6px">${list.length} vehicles</span></span><div style="display:flex;gap:8px"><button class="btn btn-outline" style="font-size:12px;padding:5px 10px" onclick="alert('Download template')">Template</button><button class="btn btn-outline" style="font-size:12px;padding:5px 10px" onclick="alert('Upload Excel file')">Upload</button></div></div>
+  <div class="vehicle-cards">${list.map(v=>`<div class="vcard"><div class="vcard-header"><div style="display:flex;align-items:center;gap:10px"><div class="vcard-icon">${vIcon(v.vehicleType)}</div><div><div class="vcard-make">${v.make} ${v.model}</div><div class="vcard-fleet">${v.fleetNumber}</div></div></div>${statusBadge(v.status)}</div><div class="vcard-details"><div class="vcard-row"><span class="vcard-key">License</span><span class="vcard-val">${v.licensePlate}</span></div><div class="vcard-row"><span class="vcard-key">Year</span><span class="vcard-val">${v.year}</span></div><div class="vcard-row"><span class="vcard-key">Cost Center</span><span class="vcard-val">${ccName(v.costCenterId)}</span></div><div class="vcard-row"><span class="vcard-key">Mileage</span><span class="vcard-val">${(v.mileage||0).toLocaleString()} km</span></div><div class="vcard-row"><span class="vcard-key">Fuel</span><span class="vcard-val">${v.fuelType||'N/A'}</span></div></div><div class="vcard-actions"><button class="vcard-btn" onclick="openEditVehicleModal(${v.id})">Edit</button><button class="vcard-btn danger" onclick="deleteVehicle(${v.id})">Delete</button></div></div>`).join('')}
+  </div></div>`;
+}
+
+function renderTransfers(){
+  const list=state.transfers;
+  if(list.length===0)return`<div class="card"><div class="empty"><div class="empty-icon">${svgArrows('var(--text3)')}</div><h3>No transfers yet</h3><p>Create your first vehicle transfer to get started.</p></div></div>`;
+  return`<div class="card"><div class="card-title">Transfer History <span style="color:var(--text3);font-weight:400;font-size:12px;margin-left:6px">${list.length} records</span></div><div style="display:flex;flex-direction:column;gap:10px">${list.map(t=>{const v=state.vehicles.find(x=>x.id===t.vehicleId);return`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px"><div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px"><div style="display:flex;align-items:center;gap:12px"><div class="vehicle-icon" style="width:38px;height:38px">${vIcon(v?.vehicleType)}</div><div><div style="font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px">${vName(t.vehicleId)}</div><div class="transfer-arrow"><span style="font-size:12px">${ccName(t.fromCostCenterId)}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg><span style="font-size:12px">${ccName(t.toCostCenterId)}</span></div></div></div><div style="display:flex;align-items:center;gap:10px">${statusBadge(t.status)}<span style="font-size:11px;color:var(--text3)">${timeAgo(t.createdAt)}</span></div></div>${t.reason?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:12px;color:var(--text3)"><b style="color:var(--text2)">Reason:</b> ${t.reason}</div>`:''}<div style="margin-top:8px;display:flex;justify-content:space-between;font-size:11px;color:var(--text3)"><span>Requested by: <span style="color:var(--text2)">${t.requestedBy}</span></span>${t.approvedBy?`<span>Approved by: <span style="color:var(--text2)">${t.approvedBy}</span></span>`:''}</div></div>`;}).join('')}</div></div>`;
+}
+
+function renderCostCenters(){
+  const list=state.costCenters;
+  if(list.length===0)return`<div class="card"><div class="empty"><div class="empty-icon">${svgBuilding('var(--text3)')}</div><h3>No cost centers yet</h3><p>Add your first cost center to get started.</p></div></div>`;
+  const vCount=id=>state.vehicles.filter(v=>v.costCenterId===id).length;
+  return`<div class="card"><div class="card-title">Cost Centers</div><div class="cc-cards">${list.map(cc=>`<div class="cc-card"><div class="cc-header"><div style="display:flex;align-items:center;gap:10px"><div class="cc-icon-wrap">${svgBuilding('var(--accent2)')}</div><div><div class="cc-name">${cc.name}</div><div class="cc-code">${cc.code}</div></div></div><span class="badge ${cc.isActive?'badge-green':'badge-gray'}">${cc.isActive?'Active':'Inactive'}</span></div>${cc.description?`<div class="cc-desc">${cc.description}</div>`:''}<div class="cc-meta"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>${vCount(cc.id)} vehicles assigned</span></div><div class="vcard-actions"><button class="vcard-btn" onclick="openEditCCModal(${cc.id})">Edit</button><button class="vcard-btn danger" onclick="deleteCC(${cc.id})">Delete</button></div></div>`).join('')}</div></div>`;
+}
+
+function renderSettings(){
+  const t=state.toggles;
+  function sr(key,sub,field,val){return`<div class="settings-row"><div><div class="settings-key">${key}</div><div class="settings-sub">${sub}</div></div><div class="toggle ${val?'on':''}" onclick="toggleSetting('${field}')"><div class="toggle-knob"></div></div></div>`;}
+  return`<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card"><div class="settings-title">Preferences</div>${sr('Dark Mode','Use dark theme','darkMode',t.darkMode)}${sr('Notifications','Enable in-app notifications','notifications',t.notifications)}${sr('Auto-Approve Transfers','Auto-approve low-priority transfers','autoApprove',t.autoApprove)}</div>
+    <div class="card"><div class="settings-title">Alerts</div>${sr('Email Alerts','Receive alerts via email','emailAlerts',t.emailAlerts)}${sr('SMS Alerts','Receive critical alerts via SMS','smsAlerts',t.smsAlerts)}</div>
+    <div class="card" style="grid-column:1/-1"><div class="settings-title">System Information</div>
+      <div class="settings-row"><div><div class="settings-key">Platform Version</div><div class="settings-sub">Current build</div></div><span style="font-size:13px;color:var(--accent2);font-family:'DM Mono',monospace">v2.4.1</span></div>
+      <div class="settings-row"><div><div class="settings-key">Database</div><div class="settings-sub">PostgreSQL connection</div></div><span class="badge badge-green">Connected</span></div>
+      <div class="settings-row"><div><div class="settings-key">Last Sync</div><div class="settings-sub">Fleet data synchronization</div></div><span style="font-size:13px;color:var(--text3)">2 minutes ago</span></div>
+      <div class="settings-row"><div><div class="settings-key">Storage Used</div><div class="settings-sub">Database and media files</div></div><span style="font-size:13px;color:var(--text2)">1.2 GB / 50 GB</span></div>
+    </div>
+  </div>`;
+}
+
+function toggleSetting(f){state.toggles[f]=!state.toggles[f];render();}
+function handleSearch(v){state.search=v;if(state.page==='fleet'||state.page==='transfers')render();}
+
+function openMainModal(){if(state.page==='fleet')openVehicleModal();else if(state.page==='transfers')openTransferModal();else if(state.page==='costcenters')openCCModal();}
+function openVehicleModal(){state.modalMode='vehicle';showModal('Add New Vehicle',vehicleForm());}
+function openEditVehicleModal(id){state.modalMode='editVehicle';state.editId=id;const v=state.vehicles.find(x=>x.id===id);showModal('Edit Vehicle',vehicleForm(v));}
+function openTransferModal(){state.modalMode='transfer';showModal('Initiate Vehicle Transfer',transferForm());}
+function openCCModal(){state.modalMode='costcenter';showModal('Add Cost Center',ccForm());}
+function openEditCCModal(id){state.modalMode='editCC';state.editId=id;const cc=state.costCenters.find(x=>x.id===id);showModal('Edit Cost Center',ccForm(cc));}
+
+function showModal(title,body){document.getElementById('modal-title').textContent=title;document.getElementById('modal-body').innerHTML=body;document.getElementById('modal-overlay').style.display='flex';}
+function closeModal(e){if(!e||e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').style.display='none';}
+
+function submitModal(){
+  const mode=state.modalMode;
+  const f=id=>document.getElementById(id)?.value||'';
+  if(mode==='vehicle'||mode==='editVehicle'){
+    const d={make:f('v-make'),model:f('v-model'),year:parseInt(f('v-year'))||2024,licensePlate:f('v-plate'),vin:f('v-vin')||'VIN'+Date.now(),fleetNumber:f('v-fleet'),status:f('v-status')||'available',costCenterId:parseInt(f('v-cc'))||null,mileage:parseInt(f('v-mileage'))||0,fuelType:f('v-fuel'),vehicleType:f('v-type')};
+    if(!d.make||!d.model||!d.licensePlate||!d.fleetNumber){alert('Please fill in required fields (Make, Model, License Plate, Fleet Number)');return;}
+    if(mode==='editVehicle')Object.assign(state.vehicles.find(x=>x.id===state.editId),d);
+    else{d.id=state.vehicles.length?Math.max(...state.vehicles.map(x=>x.id))+1:1;state.vehicles.push(d);}
+  } else if(mode==='transfer'){
+    const d={vehicleId:parseInt(f('t-vehicle')),fromCostCenterId:parseInt(f('t-from'))||null,toCostCenterId:parseInt(f('t-to')),status:'pending',reason:f('t-reason'),requestedBy:f('t-by')||'Fleet Manager',approvedBy:null,createdAt:new Date().toISOString()};
+    if(!d.vehicleId||!d.toCostCenterId){alert('Please select a vehicle and destination cost center');return;}
+    d.id=state.transfers.length?Math.max(...state.transfers.map(x=>x.id))+1:1;state.transfers.unshift(d);
+  } else if(mode==='costcenter'||mode==='editCC'){
+    const d={name:f('cc-name'),code:f('cc-code'),description:f('cc-desc'),isActive:document.getElementById('cc-active')?.checked!==false};
+    if(!d.name||!d.code){alert('Please fill in required fields (Name, Code)');return;}
+    if(mode==='editCC')Object.assign(state.costCenters.find(x=>x.id===state.editId),d);
+    else{d.id=state.costCenters.length?Math.max(...state.costCenters.map(x=>x.id))+1:1;state.costCenters.push(d);}
+  }
+  closeModal();render();
+}
+
+function vehicleForm(v){
+  const ccOpts=state.costCenters.map(c=>`<option value="${c.id}" ${v?.costCenterId===c.id?'selected':''}>${c.name}</option>`).join('');
+  return`<div class="form-grid-2"><div class="form-row"><label class="form-label">Make *</label><input class="form-input" id="v-make" value="${v?.make||''}" placeholder="Toyota"/></div><div class="form-row"><label class="form-label">Model *</label><input class="form-input" id="v-model" value="${v?.model||''}" placeholder="Land Cruiser"/></div></div><div class="form-grid-2"><div class="form-row"><label class="form-label">Year</label><input class="form-input" id="v-year" type="number" value="${v?.year||2024}"/></div><div class="form-row"><label class="form-label">License Plate *</label><input class="form-input" id="v-plate" value="${v?.licensePlate||''}" placeholder="ABC-1234"/></div></div><div class="form-grid-2"><div class="form-row"><label class="form-label">Fleet Number *</label><input class="form-input" id="v-fleet" value="${v?.fleetNumber||''}" placeholder="FL-001"/></div><div class="form-row"><label class="form-label">VIN</label><input class="form-input" id="v-vin" value="${v?.vin||''}" placeholder="VIN number"/></div></div><div class="form-grid-2"><div class="form-row"><label class="form-label">Status</label><select class="form-input" id="v-status"><option value="available" ${v?.status==='available'?'selected':''}>Available</option><option value="in_use" ${v?.status==='in_use'?'selected':''}>In Use</option><option value="maintenance" ${v?.status==='maintenance'?'selected':''}>Maintenance</option><option value="out_of_service" ${v?.status==='out_of_service'?'selected':''}>Out of Service</option></select></div><div class="form-row"><label class="form-label">Vehicle Type</label><select class="form-input" id="v-type"><option value="car" ${v?.vehicleType==='car'?'selected':''}>Car</option><option value="suv" ${v?.vehicleType==='suv'?'selected':''}>SUV</option><option value="truck" ${v?.vehicleType==='truck'?'selected':''}>Truck</option><option value="van" ${v?.vehicleType==='van'?'selected':''}>Van</option></select></div></div><div class="form-grid-2"><div class="form-row"><label class="form-label">Fuel Type</label><select class="form-input" id="v-fuel"><option value="gasoline" ${v?.fuelType==='gasoline'?'selected':''}>Gasoline</option><option value="diesel" ${v?.fuelType==='diesel'?'selected':''}>Diesel</option><option value="electric" ${v?.fuelType==='electric'?'selected':''}>Electric</option><option value="hybrid" ${v?.fuelType==='hybrid'?'selected':''}>Hybrid</option></select></div><div class="form-row"><label class="form-label">Mileage (km)</label><input class="form-input" id="v-mileage" type="number" value="${v?.mileage||0}"/></div></div><div class="form-row"><label class="form-label">Cost Center</label><select class="form-input" id="v-cc"><option value="">Unassigned</option>${ccOpts}</select></div>`;
+}
+function transferForm(){
+  const vOpts=state.vehicles.map(v=>`<option value="${v.id}">${v.make} ${v.model} — ${v.fleetNumber}</option>`).join('');
+  const ccOpts=state.costCenters.filter(c=>c.isActive).map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  return`<div class="form-row"><label class="form-label">Vehicle *</label><select class="form-input" id="t-vehicle"><option value="">Select vehicle...</option>${vOpts}</select></div><div class="form-row"><label class="form-label">From Cost Center</label><select class="form-input" id="t-from"><option value="">Unassigned</option>${ccOpts}</select></div><div class="form-row"><label class="form-label">To Cost Center *</label><select class="form-input" id="t-to"><option value="">Select destination...</option>${ccOpts}</select></div><div class="form-row"><label class="form-label">Reason</label><textarea class="form-input" id="t-reason" rows="3" placeholder="Reason for transfer..."></textarea></div><div class="form-row"><label class="form-label">Requested By</label><input class="form-input" id="t-by" value="Fleet Manager"/></div>`;
+}
+function ccForm(cc){
+  return`<div class="form-row"><label class="form-label">Name *</label><input class="form-input" id="cc-name" value="${cc?.name||''}" placeholder="Operations North"/></div><div class="form-row"><label class="form-label">Code *</label><input class="form-input" id="cc-code" value="${cc?.code||''}" placeholder="OPS-N"/></div><div class="form-row"><label class="form-label">Description</label><textarea class="form-input" id="cc-desc" rows="2" placeholder="Optional description...">${cc?.description||''}</textarea></div><div class="form-row" style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="cc-active" ${cc?.isActive!==false?'checked':''} style="width:16px;height:16px;cursor:pointer"/><label for="cc-active" class="form-label" style="margin:0;cursor:pointer">Active cost center</label></div>`;
+}
+
+function deleteVehicle(id){if(confirm('Delete this vehicle?')){state.vehicles=state.vehicles.filter(x=>x.id!==id);render();}}
+function deleteCC(id){if(state.vehicles.some(v=>v.costCenterId===id)){alert('Cannot delete: vehicles are assigned to this cost center.');return;}if(confirm('Delete this cost center?')){state.costCenters=state.costCenters.filter(x=>x.id!==id);render();}}
+
+render();
+</script>
+</body>
+</html>
