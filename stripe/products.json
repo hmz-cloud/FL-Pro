@@ -1,0 +1,38 @@
+{
+  "products": [
+    {
+      "name": "FleetOps Starter",
+      "description": "For small fleets — up to 5 vehicles",
+      "metadata": { "vehicle_limit": "5", "plan": "starter" },
+      "price": { "amount": 0, "interval": "month", "nickname": "Free" }
+    },
+    {
+      "name": "FleetOps Business",
+      "description": "Unlimited vehicles, GPS, compliance tracking",
+      "metadata": { "vehicle_limit": "unlimited", "plan": "business" },
+      "prices": [
+        { "amount": 14900, "interval": "month", "nickname": "Business Monthly — $149/mo" },
+        { "amount": 134100, "interval": "year",  "nickname": "Business Annual — $1,341/yr (save 25%)" }
+      ]
+    },
+    {
+      "name": "FleetOps Enterprise",
+      "description": "Unlimited + SSO + dedicated support + custom integrations",
+      "metadata": { "vehicle_limit": "unlimited", "plan": "enterprise" },
+      "price": { "amount": 0, "nickname": "Enterprise — Contact Sales" }
+    }
+  ],
+  "trial_days": 14,
+  "required_webhook_events": [
+    "customer.subscription.created",
+    "customer.subscription.updated",
+    "customer.subscription.deleted",
+    "invoice.payment_succeeded",
+    "invoice.payment_failed"
+  ],
+  "test_cards": {
+    "success":       "4242 4242 4242 4242",
+    "decline":       "4000 0000 0000 0002",
+    "requires_auth": "4000 0025 0000 3155"
+  }
+}
