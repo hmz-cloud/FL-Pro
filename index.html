@@ -35,9 +35,7 @@ input,select,textarea{font-family:inherit;outline:none}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
 .login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(79,142,247,0.15),transparent),radial-gradient(ellipse 60% 50% at 90% 100%,rgba(167,139,250,0.1),transparent)}
 .login-card{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:40px;width:100%;max-width:440px;position:relative;z-index:1;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
-.login-logo-icon{width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center}
-.login-logo-icon svg{width:22px;height:22px;fill:white}
+
 .login-brand{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.5px}
 .login-brand span{color:var(--accent2)}
 .login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px;text-align:center}
@@ -498,10 +496,11 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="landing-screen" class="landing">
   <nav class="landing-nav">
     <div style="display:flex;align-items:center;gap:10px">
-      <div class="login-logo-icon" style="width:36px;height:36px"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg></div>
+      <div class="login-logo" style="width:36px;height:36px"><svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg></div>
       <span style="font-size:17px;font-weight:700">Fleet<span style="color:var(--accent2)">Ops</span></span>
     </div>
     <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-ghost btn-sm" onclick="scrollToSec('sec-about')">About Us</button>
       <button class="btn btn-ghost btn-sm" onclick="scrollToSec('sec-features')">Features</button>
       <button class="btn btn-ghost btn-sm" onclick="scrollToSec('sec-vs')">Why Us</button>
       <button class="btn btn-ghost btn-sm" onclick="scrollToSec('sec-pricing')">Pricing</button>
@@ -511,8 +510,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
   <section class="landing-hero">
     <div class="hero-bg"></div>
-    <div class="hero-badge">🚀 Fleet management that goes beyond GPS</div>
-    <h1 class="hero-title">Know where your fleet is.<br/>Know <span>everything else</span> too.</h1>
+    <div class="hero-badge">Fleet management that goes beyond GPS</div>
+    <h1 class="hero-title">Opreate Your Fleet.<br/>The Right <span>Way. </span> </h1>
     <p class="hero-sub">GPS tells you where a vehicle is. FleetOps tells you who's responsible, what it costs, what's due for service, and whether you're compliant — in one dashboard your whole team understands in seconds.</p>
     <div class="hero-cta">
       <button class="btn btn-primary btn-lg" onclick="showLogin()">Try the Live Demo — Free</button>
@@ -523,8 +522,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
   <section class="section" id="sec-features">
     <div class="section-eyebrow">Built for simplicity</div>
-    <h2 class="section-h">Everything a fleet needs. Nothing it doesn't.</h2>
-    <p class="section-lead">Most fleet software is bloated and confusing. FleetOps does the four things that actually save you money — beautifully.</p>
+    <h2 class="section-h">Everything a fleet needs. To truly opreate.</h2>
+    <p class="section-lead">Most fleet software is bloated and confusing. FleetOps does the six things that actually save you money — beautifully.</p>
     <div class="feature-grid">
       <div class="feature-card"><div class="feature-icon" style="background:var(--green-bg)"><svg viewBox="0 0 24 24" fill="var(--green)"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div><h3>Cost & Budget Control</h3><p>Track spend per cost center and per vehicle. See budget vs. actual at a glance. Catch overspending before it happens.</p></div>
       <div class="feature-card"><div class="feature-icon" style="background:var(--accent-bg)"><svg viewBox="0 0 24 24" fill="var(--accent2)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><h3>Driver Assignment</h3><p>Know exactly who's responsible for every vehicle. Assign, reassign, and keep a full history. No more "whose car was this?"</p></div>
@@ -537,8 +536,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
   <section class="section" id="sec-vs">
     <div class="section-eyebrow">GPS vs. FleetOps</div>
-    <h2 class="section-h">GPS shows you a dot on a map.<br/>We run your whole fleet.</h2>
-    <p class="section-lead">Location is only the beginning. Here's what GPS-only tools miss — and what FleetOps handles.</p>
+    <h2 class="section-h">GPS shows you a dot on a map.<br/>We operate your whole fleet.</h2>
+    <p class="section-lead">GPS Location is only the beginning. Here's what GPS-only tools miss — and what FleetOps handles.</p>
     <div class="vs-table">
       <div class="vs-head">
         <div class="vs-head-cell">Capability</div>
@@ -585,8 +584,95 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         <div class="vs-gps"><span class="vs-no-txt">No</span></div>
         <div class="vs-fo"><span class="vs-yes-txt">Yes</span><span class="vs-note-txt">By design</span></div>
       </div>
-    </div>
+    
   </section>
+  <section class="section" id="sec-about">
+  <div class="section-eyebrow">Our Story</div>
+  <h2 class="section-h">Born From Real Operations. <p>Built For Real Work. </p></h2>
+  <p class="section-lead">
+    FleetOps Pro wasn’t created in a meeting room — it was born on real project sites. After years working with
+    large contracting and project-driven companies, we saw the same problems repeating: fleets scattered across
+    multiple locations, vehicles moving without records, drivers relying on calls and WhatsApp, and operations
+    teams trying to manage millions in assets using spreadsheets and guesswork.</p>  
+    <p class="section-lead">
+      The issue was never effort — it was visibility. Transport managers, project directors, and operations teams
+    across Saudi Arabia all shared the same frustrations: unclear accountability, missing transfer logs, delayed
+    maintenance, and systems that were either too complicated to adopt or too limited to trust.</p>
+ 
+
+      <div class="section-eyebrow">FleetOps Pro was built as the answer.</div>
+
+  <div class="feature-grid">
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--accent-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--accent2)">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+        </svg>
+      </div>
+      <h3>Built From Real Problems</h3>
+      <p>Every feature comes from real operational pain points observed inside large project companies.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--green-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--green)">
+          <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+        </svg>
+      </div>
+      <h3>Effortless Usability</h3>
+      <p>Teams adopt FleetOps Pro in minutes — no training, no complexity, no confusion.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--amber-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--amber)">
+          <path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/>
+        </svg>
+      </div>
+      <h3>Total Operational Control</h3>
+      <p>Vehicles, drivers, transfers, sites, compliance — everything in one unified system.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--purple-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--purple)">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+        </svg>
+      </div>
+      <h3>Real-Time Visibility</h3>
+      <p>Instant clarity across your entire fleet. No more guessing or chasing information.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--cyan-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--cyan)">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+        </svg>
+      </div>
+      <h3>Scales With You</h3>
+      <p>From small fleets to mega-projects — FleetOps Pro grows with your operation.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon" style="background:var(--accent-bg)">
+        <svg viewBox="0 0 24 24" fill="var(--accent2)">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+      </div>
+      <h3>Designed For Everyone</h3>
+      <p>FleetOps Pro is simple enough for any team member — from drivers to directors.</p>
+    </div>
+    
+ <div class="section-eyebrow">What its all about</div>
+  <h2 class="section-h">FleetOps Pro. <p>isn’t just the software. </p></h2>
+  <p class="section-lead">
+    It’s the operational backbone for modern project companies — designed from
+    real challenges, built for real work, and engineered to make fleet management simple, powerful, and fully
+    under control.</p>  
+    
+</section>
+
 
   <section class="section" id="sec-pricing">
     <div class="section-eyebrow">Simple pricing</div>
@@ -609,12 +695,12 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         <div class="price-ribbon">Most Popular</div>
         <div class="price-tier">Business</div>
         <div class="price-desc">For growing fleets that need control</div>
-        <div class="price-amount">Custom</div>
-        <div class="price-period">contact sales for a quote</div>
+        <div class="price-amount">558.75/mo</div>
+        <div class="price-period">Saudi Riyals</div>
         <ul class="price-feats">
           <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Everything in Starter</li>
-          <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Unlimited vehicles & users</li>
-          <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Cost centers & budgets</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Unlimited Vehicles & Users</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Cost Centers & Budgets</li>
           <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>GPS integration</li>
           <li><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Compliance tracking</li>
         </ul>
@@ -639,7 +725,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <section class="section" id="sec-contact">
     <div class="section-eyebrow">Get started</div>
     <h2 class="section-h">Let's get your fleet under control</h2>
-    <p class="section-lead">Tell us about your fleet and we'll set you up with a personalized demo.</p>
+    <p class="section-lead">Tell us about your fleet setup and we'll set you up with a personalized demo.</p>
     <div class="contact-form">
       <div class="form-grid-2">
         <div class="form-row"><label class="form-label">Name</label><input class="form-input" id="ct-name" placeholder="Your name"/></div>
@@ -656,7 +742,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
   <footer class="landing-footer">
     <div style="margin-bottom:8px;font-weight:600;color:var(--text2)">FleetOps Pro</div>
-    <div>Fleet management that goes beyond GPS. © 2026 · Built for businesses that move.</div>
+    <div style="margin-bottom:8px;font-weight:600;color:var(--text2)">Built for businesses that move.</div>
+    <div>© 2026 All Rights Reserved FleetOps Pro·</div>
     <div style="margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="showLogin()">Live Demo</button></div>
   </footer>
 </div>
@@ -675,7 +762,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       </div>
     </div>
     <div class="login-title">Welcome back</div>
-    <div class="login-sub">Select a demo account to explore the platform</div>
+    <div class="login-sub">Select a demo account to explore the platform right away</div>
     <div class="demo-roles" id="demo-roles">
       <div class="demo-role selected" onclick="selectRole('admin',this)">
         <div class="demo-role-icon">👑</div>
@@ -711,7 +798,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       Sign In →
     </button>
     <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--text3)">
-      No account needed — this is a live demo
+      No account needed — This is a live demo
     </div>
     <div style="text-align:center;margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="showLanding()">← Back to site</button></div>
   </div>
