@@ -523,7 +523,9 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="landing-screen" class="landing">
   <nav class="landing-nav">
     <div style="display:flex;align-items:center;gap:10px">
-      <img class="logo-img" src="https://raw.githubusercontent.com/hmz-cloud/FL-Pro/main/assets/FL-Logo-W.svg" alt="FleetOps Pro Logo">
+      <img class="logo-img" src="https://raw.githubusercontent.com/hmz-cloud/FL-Pro/main/assets/FL-Logo-W.svg" 
+           alt="FleetOps Pro Logo" 
+           onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=font-size:20px;font-weight:700;color:white;>FleetOps</span>'">
     </div>
     <div style="display:flex;gap:10px;align-items:center">
       <button class="btn btn-ghost btn-sm" onclick="scrollToSec('sec-about')">About Us</button>
