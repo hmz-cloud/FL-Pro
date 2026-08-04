@@ -757,18 +757,53 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="section-eyebrow">Get started</div>
     <h2 class="section-h">Let's get your fleet under control</h2>
     <p class="section-lead">Tell us about your fleet setup and we'll set you up with a personalized demo.</p>
-    <div class="contact-form">
-      <div class="form-grid-2">
-        <div class="form-row"><label class="form-label">Name</label><input class="form-input" id="ct-name" placeholder="Your name"/></div>
-        <div class="form-row"><label class="form-label">Company</label><input class="form-input" id="ct-company" placeholder="Company name"/></div>
-      </div>
-      <div class="form-grid-2">
-        <div class="form-row"><label class="form-label">Email</label><input class="form-input" id="ct-email" placeholder="you@company.com"/></div>
-        <div class="form-row"><label class="form-label">Fleet size</label><select class="form-input" id="ct-size"><option>1–5 vehicles</option><option>6–20 vehicles</option><option>21–50 vehicles</option><option>50+ vehicles</option></select></div>
-      </div>
-      <div class="form-row"><label class="form-label">Message</label><textarea class="form-input" id="ct-msg" rows="3" placeholder="What challenges are you facing with your fleet?"></textarea></div>
-      <button class="btn btn-primary btn-full btn-lg" onclick="submitContact()">Request a Demo</button>
+    <form class="contact-form" action="https://formsubmit.co/info@fleetops-pro.com" method="POST">
+
+  <input type="hidden" name="_subject" value="New FleetOps Pro Demo Request">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="table">
+
+  <div class="form-grid-2">
+    <div class="form-row">
+      <label class="form-label">Name</label>
+      <input class="form-input" id="ct-name" name="name" placeholder="Your name" required>
     </div>
+
+    <div class="form-row">
+      <label class="form-label">Company</label>
+      <input class="form-input" id="ct-company" name="company" placeholder="Company name" required>
+    </div>
+  </div>
+
+  <div class="form-grid-2">
+    <div class="form-row">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="ct-email" name="email" type="email" placeholder="you@company.com" required>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Fleet size</label>
+      <select class="form-input" id="ct-size" name="fleet_size" required>
+        <option value="">Select fleet size</option>
+        <option value="1-10">1–10 vehicles</option>
+        <option value="11-50">11–50 vehicles</option>
+        <option value="51-200">51–200 vehicles</option>
+        <option value="200+">200+ vehicles</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Message</label>
+    <textarea class="form-input" id="ct-msg" name="message" placeholder="Tell us about your fleet"></textarea>
+  </div>
+
+  <button class="btn btn-primary btn-full btn-lg" type="submit">
+    Request a Demo
+  </button>
+
+</form>
+
   </section>
 
   <footer class="landing-footer">
@@ -819,7 +854,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="login-divider">or enter credentials</div>
     <div class="form-row">
       <label class="form-label">Email</label>
-      <input class="form-input" id="login-email" placeholder="admin@fleetops.com" value="admin@fleetops.com"/>
+      <input class="form-input" id="login-email" placeholder="admin@fleetops-pro.com" value="admin@fleetops-pro.com"/>
     </div>
     <div class="form-row">
       <label class="form-label">Password</label>
@@ -1014,7 +1049,7 @@ function selectRole(role,el){
   selectedRole=role;
   document.querySelectorAll('.demo-role').forEach(e=>e.classList.remove('selected'));
   el.classList.add('selected');
-  const emails={admin:'admin@fleetops.com',manager:'manager@fleetops.com',driver:'driver@fleetops.com',viewer:'viewer@fleetops.com'};
+  const emails={admin:'admin@fleetops-pro.com',manager:'manager@fleetops-pro.com',driver:'driver@fleetops-pro.com',viewer:'viewer@fleetops-pro.com'};
   document.getElementById('login-email').value=emails[role];
 }
 function doLogin(){
