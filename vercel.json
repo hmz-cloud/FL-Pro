@@ -1,7 +1,6 @@
 {
   "name": "fleetops-pro",
   "version": "3.0.0",
-  "private": true,
   "scripts": {
     "dev": "npx serve . -p 3000 --single",
     "build": "echo 'Static — no build step needed'",
